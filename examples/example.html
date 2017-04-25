@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rangeslide.js - demo</title>
+	<meta name="author" content="your name" />
+	<meta name="description" content="" />
+	
+	<link rel="stylesheet" href="example.css" type="text/css" />
+	<link rel="stylesheet" href="../dist/css/rangeslide.css" type="text/css" />
+</head>
+<body>
+	<div class="sliders">
+		<div class="example">
+			<div>
+				<p>Here is basic range slider using default configuration:</p>
+			</div>
+			<div id="rangeslide1" class="rangeslide"></div>
+		</div>
+		<div class="example">
+			<div>
+				<p>We can change thumb size and show some labels:</p>
+			</div>
+			<div id="rangeslide2" class="rangeslide"></div>
+		</div>
+		<div class="example">
+			<div>
+				<p>Next lets show labels (with ticks) at the bottom and value indicator (on thumb by default):</p>
+			</div>
+			<div id="rangeslide3" class="rangeslide"></div>
+		</div>
+		<div class="example">
+			<div>
+				<p>It is also possible to show labels above and change value indicator appearance and placement:</p>
+			</div>
+			<div id="rangeslide4" class="rangeslide"></div>
+		</div>
+		<div class="example">
+			<div>
+				<p>We can even alternate labels placement (useful when it get's too crowded):</p>
+			</div>
+			<div id="rangeslide5" class="rangeslide"></div>
+		</div>
+		<div class="example">
+			<div>
+				<p>Range slider can as well be used as toggle button - just add some side labels:</p>
+			</div>
+			<div id="rangeslide6" class="rangeslide"></div>
+		</div>
+		<div class="example">
+			<div>
+				<p>Now let's change what is displayed in the indicator and show some markers on the track:</p>
+			</div>
+			<div id="rangeslide7" class="rangeslide"></div>
+		</div>
+		<div class="example">
+			<div>
+				<p>And let's make them a little more fancy by showing progress on markers:</p>
+			</div>
+			<div id="rangeslide8" class="rangeslide"></div>
+		</div>
+		<div class="example">
+			<div>
+				<p>Markers size can be altered and progress can also be idicated on the track itself:</p>
+			</div>
+			<div id="rangeslide9" class="rangeslide"></div>
+		</div>
+		<div class="example">
+			<div>
+				<p>Last but not least we can activate auto play mode (one time or loop):</p>
+			</div>
+			<div id="rangeslide10" class="rangeslide"></div>
+		</div>
+	</div>
+	<div class="preview">
+		<h3 class="panel-title">Data preview:</h3>
+		<div id="presenter" class="panel-body"></div>
+	</div>
+<script src="../dist/js/rangeslide.js"></script>
+<script>
+	var data1 = [
+		{ name: "2016", item: "This is some sample text associated with first item." },
+		{ name: "2017", item: "This is some sample text associated with second item." },
+		{ name: "2018", item: "This is some sample text associated with third item. It was returned from a function." },
+		{ name: "2019", item: function() { return "This is some sample text associated with fourth item. It was also returned from a function."; } },
+		{ name: "2020", item: "This is some sample text associated with fifth item." },
+		{ name: "2021", item: "This is some sample text associated with sixth item." },
+		{ name: "2022", item: "This is some sample text associated with the last item." }
+	];
+	
+	var data3 = [
+		{ name: "off", item: "Turned off" },
+		{ name: "on", item: "Turned on" }
+	];
+	
+	var onChange = function(arguments) {
+		var presenter = document.getElementById("presenter");
+		if (typeof arguments.item === "string") {
+			presenter.innerHTML = "<b>#" + this.getElement().id + ":</b> " + arguments.item;
+		}
+		else if (typeof arguments.item === "function") {
+			presenter.innerHTML = "<b>#" + this.getElement().id + ":</b> " + arguments.item();
+		}
+	};
+	
+	var rangeslide1 = rangeslide("#rangeslide1", {
+		data: data1,
+		thumbWidth: 36,
+		thumbHeight: 36,
+		handlers: {
+			"valueChanged": [onChange]
+		}
+	});
+	
+	var rangeslide2 = rangeslide("#rangeslide2", {
+		data: data1,
+		showLabels: true,
+		startPosition: 3,
+		showTicks: false,
+		thumbWidth: 14,
+		thumbHeight: 14,
+		handlers: {
+			"valueChanged": [onChange]
+		}
+	});
+	
+	var rangeslide3 = rangeslide("#rangeslide3", {
+		data: data1,
+		showValue: true,
+		thumbWidth: 40,
+		thumbHeight: 30,
+		showLabels: true,
+		showTicks: true,
+		handlers: {
+			"valueChanged": [onChange]
+		}
+	});
+	
+	var rangeslide4 = rangeslide("#rangeslide4", {
+		data: data1,
+		labelsPosition: "above",
+		valuePosition: "below",
+		highlightSelectedLabels: true,
+		tickHeight: 10,
+		showLabels: true,
+		showTicks: true,
+		showValue: true,
+		handlers: {
+			"valueChanged": [onChange]
+		}
+	});
+	
+	var rangeslide5 = rangeslide("#rangeslide5", {
+		data: data1,
+		thumbWidth: 32,
+		thumbHeight: 32,
+		labelsPosition: "alternate",
+		showLabels: true,
+		startAlternateLabelsFromTop: false,
+		trackHeight: 20,
+		showTicks: true,
+		tickHeight: 30,
+		handlers: {
+			"valueChanged": [onChange]
+		}
+	});
+	var rangeslide6 = rangeslide("#rangeslide6", {
+		data: data3,
+		thumbWidth: 36,
+		thumbHeight: 36,
+		showLabels: false,
+		leftLabel: "off",
+		rightLabel: "on",
+		valueSource: "name",
+		showValue: true,
+		sideLabelsWidth: 45,
+		handlers: {
+			"valueChanged": [onChange]
+		}
+	});
+	var rangeslide7 = rangeslide("#rangeslide7", {
+		data: data1,
+		showValue: true,
+		valuePosition: "above",
+		startPosition: 5,
+		valueSource: "name",
+		thumbWidth: 26,
+		thumbHeight: 26,
+		showLabels: false,
+		valueIndicatorWidth: 60,
+		valueIndicatorHeight: 20,
+		showTrackMarkers: true,
+		handlers: {
+			"valueChanged": [onChange]
+		}
+	});
+	
+	var rangeslide8 = rangeslide("#rangeslide8", {
+		data: data1,
+		startPosition: 4,
+		showLabels: true,
+		labelsPosition: "below",
+		tickHeight: 12,
+		showTicks: true,
+		showTrackMarkers: true,
+		showTrackMarkersProgress: true,
+		handlers: {
+			"valueChanged": [onChange]
+		}
+	});
+	
+	var rangeslide9 = rangeslide("#rangeslide9", {
+		data: data1,
+		startPosition: 2,
+		showLabels: true,
+		labelsPosition: "above",
+		thumbHeight: 50,
+		thumbWidth: 20,
+		trackHeight: 4,
+		showTrackMarkers: true,
+		showTrackMarkersProgress: true,
+		showTrackProgress: true,
+		markerSize: 50,
+		handlers: {
+			"valueChanged": [onChange]
+		}
+	});
+	
+	var rangeslide10 = rangeslide("#rangeslide10", {
+		data: data1,
+		startPosition: 0,
+		autoPlay: true,
+		autoPlayDelay: 1000,
+		loop: true,
+		thumbHeight: 22,
+		thumbWidth: 22,
+		showTrackMarkers: true,
+		showTrackMarkersProgress: true,
+		showTrackProgress: true,
+		markerSize: 16,
+		showValue: true
+	});
+</script>
+</body>
+</html>
