@@ -95,7 +95,7 @@ The example of a structure of an options object is as follows:
 Here is the explanation of options object:
 
 Option                      | Type    | Description                                             | Default | Options
---------------------------- | ------- | ------------------------------------------------------- | ------- |
+--------------------------- | ------- | ------------------------------------------------------- | ------- | ---------- |
 autoPlay                    | Boolean | Enable auto play mode                                   | false   |
 autoPlayDelay               | Number  | Delay (in miliseconds) between steps in auto play mode  | 1000    |
 data                        | Array   | Array of data objects (property 'name' is mandatory     | []      |
