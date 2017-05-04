@@ -77,7 +77,7 @@
 			this.__playInterval;
 			
 			this.checkIfTargetIsValid(target);
-			this.setAutoPlay();
+			this.setAutoPlay(this.config.autoPlay);
 			this.__targetElement.appendChild(this.createUI());
 			var distanceOffset = this.config.thumbWidth;
 			var distance = (this.__targetElement.clientWidth - distanceOffset) / ((this.config.data.length - 1) / this.config.stepSize);
@@ -343,11 +343,14 @@
 			return isNaN(parseFloat(this.__thumbElement.style.left)) ? 0 : parseFloat(this.__thumbElement.style.left);
 		},
 		
-		setAutoPlay: function() {
-			if(!this.config.autoPlay) {
+		setAutoPlay: function(value) {
+			if(!value) {
+				clearInterval(this.__playInterval);
+				this.fire("playStop", [this.__value, this.__targetElement]);
 				return;
 			}
 			this.__playInterval = setInterval(this.goToNextMarker.bind(this), this.config.autoPlayDelay);
+			this.fire("playStart", [this.__value, this.__targetElement]);
 		},
 		
 		goToNextMarker: function() {

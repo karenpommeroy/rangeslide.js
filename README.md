@@ -200,7 +200,6 @@ Event             | Description                             | Arguments
 valueChanged      | Fires after slider value is changed     | dataItem, rangeslideElement
 playStart         | Fires when auto play is started         | dataItem, rangeslideElement
 playStop          | Fires when auto play is stopped         | dataItem, rangeslideElement
-playLoopFinished  | Fires when auto play loop is complete   | rangeslideElement
 initialized       | Fires after slider is initialized       | rangeslideElement
 refreshed         | Fires after slider is refreshed         | rangeslideElement
 trackClicked      | Fires after slider track is clicked     | dataItem, trackElement
