@@ -16,6 +16,7 @@ Customizable range slider with labels (but without jQuery)
 ## Screenshots
 
 ![Rangeslide with labels and tooltip](https://rawgit.com/karenpommeroy/rangeslide.js/master/assets/screen_1.png)
+![Example with different label positioning](https://rawgit.com/karenpommeroy/rangeslide.js/master/assets/screen_2.png)
 
 ## Quick start
 Several quick start options are available:
