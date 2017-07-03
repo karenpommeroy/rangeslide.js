@@ -1,6 +1,6 @@
 {
   "name": "rangeslide.js",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "Lightweight customizable range slider with labels (but without jQuery)",
   "main": "dist/js/rangeslide.js",
   "scripts": {},
@@ -16,8 +16,8 @@
   ],
   "author": "karenpommeroy <mkarpins@gmail.com>",
   "repository": {
-	"type" : "git",
-	"url" : "https://github.com/karenpommeroy/rangeslide.js"
+    "type": "git",
+    "url": "https://github.com/karenpommeroy/rangeslide.js"
   },
   "license": "MIT",
   "devDependencies": {},
