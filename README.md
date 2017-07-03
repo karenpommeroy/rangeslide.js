@@ -3,6 +3,7 @@ Customizable range slider with labels (but without jQuery)
 
 ## Table of contents
 
+- [Screenshots](#screenshots)
 - [Quick start](#quick-start)
 - [Usage](#usage)
 - [Examples](#examples)
@@ -11,6 +12,10 @@ Customizable range slider with labels (but without jQuery)
 - [Events](#events)
 - [Browser support](#browser-support)
 - [Copyright and license](#copyright-and-license)
+
+## Screenshots
+
+![Rangeslide with labels and tooltip](https://rawgit.com/karenpommeroy/rangeslide.js/master/assets/screen_1.png)
 
 ## Quick start
 Several quick start options are available:
