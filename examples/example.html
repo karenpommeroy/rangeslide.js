@@ -6,7 +6,7 @@
 	<meta name="description" content="" />
 	
 	<link rel="stylesheet" href="example.css" type="text/css" />
-	<link rel="stylesheet" href="../dist/css/rangeslide.css" type="text/css" />
+	<link rel="stylesheet" href="../dist/rangeslide.css" type="text/css" />
 </head>
 <body>
 	<div class="sliders">
@@ -70,12 +70,30 @@
 			</div>
 			<div id="rangeslide10" class="rangeslide"></div>
 		</div>
+        <div class="example">
+			<div>
+				<p>More thumbs on one slider:</p>
+			</div>
+			<div id="rangeslide11" class="rangeslide"></div>
+		</div>
+        <div class="example">
+			<div>
+				<p>Rangeslide operating in selection mode:</p>
+			</div>
+			<div id="rangeslide12" class="rangeslide"></div>
+		</div>
+        <div class="example">
+			<div>
+				<p>Rangeslide with time data:</p>
+			</div>
+			<div id="rangeslide13" class="rangeslide"></div>
+		</div>
 	</div>
 	<div class="preview">
 		<h3 class="panel-title">Data preview:</h3>
 		<div id="presenter" class="panel-body"></div>
 	</div>
-<script src="../dist/js/rangeslide.js"></script>
+<script src="../dist/rangeslide.js"></script>
 <script>
 	var data1 = [
 		{ name: "2016", item: "This is some sample text associated with first item." },
@@ -85,6 +103,16 @@
 		{ name: "2020", item: "This is some sample text associated with fifth item." },
 		{ name: "2021", item: "This is some sample text associated with sixth item." },
 		{ name: "2022", item: "This is some sample text associated with the last item." }
+	];
+    
+    var data2 = [
+		{ name: "Date1", item: new Date(2016, 5, 5, 12, 0 ) },
+		{ name: "Date2", item: new Date(2016, 6, 6, 13, 12) },
+        { name: "Date3", item: new Date(2016, 10, 22, 4, 5) },
+        { name: "Date4", item: new Date(2017, 1, 5, 16, 55) },
+        { name: "Date5", item: new Date(2017, 3, 11, 22, 22) },
+        { name: "Date6", item: new Date(2017, 4, 7, 6, 6) },
+        { name: "Date7", item: new Date(2017, 6, 13, 11, 14) },
 	];
 	
 	var data3 = [
@@ -239,6 +267,30 @@
 		markerSize: 16,
 		showValue: true
 	});
+    
+    var rangeslide11 = rangeslide("#rangeslide11", {
+		data: data1,
+		thumbWidth: 20,
+		thumbHeight: 36,
+        showTrackMarkers: true,
+		showTrackMarkersProgress: true,
+        showTrackProgress: true,
+        showLabels: true,
+        valuePosition: "above",
+        showTicks: true,
+        valueIndicatorWidth: 60,
+		valueIndicatorHeight: 20,
+        highlightSelectedLabels: true,
+		valueSource: "name",
+		showValue: true,
+		mode: "range"
+	});
+    
+    var rangeslide12 = rangeslide("#rangeslide12", {
+		data: data1,
+		mode: "select"
+	});
+    
 </script>
 </body>
 </html>
