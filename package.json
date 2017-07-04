@@ -1,6 +1,6 @@
 {
   "name": "rangeslide.js",
-  "version": "0.9.5",
+  "version": "0.10.0",
   "description": "Lightweight customizable range slider with labels (but without jQuery)",
   "main": "dist/js/rangeslide.js",
   "scripts": {},
@@ -28,6 +28,5 @@
     "grunt-contrib-uglify": "^3.0.1",
     "grunt-umd": "^2.4.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
