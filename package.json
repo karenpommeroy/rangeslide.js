@@ -1,6 +1,6 @@
 {
   "name": "rangeslide.js",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Lightweight customizable range slider with labels (but without jQuery)",
   "main": "dist/js/rangeslide.js",
   "scripts": {},
