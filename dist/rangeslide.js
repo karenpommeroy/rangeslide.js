@@ -336,7 +336,7 @@
 				}
 				var span = document.createElement("span");
 				span.className = "noselect";
-				span.innerText = this.config.data[i].name;
+				span.innerText = this.config.data[i][this.config.valueSource];
 				if (labelsBeforeTicks) {
 					labelElement.insertBefore(span, tickElement);
 				}
@@ -431,23 +431,6 @@
         
         setMaxValue: function(index) {
 			this.setValue(index, this.__thumbRight);
-		},
-		
-		setValueByName: function(name, thumb) {
-			var oldValue = thumb.getValue(); 
-			thumb.setValue(this.getMarkerByName(name));
-			var distanceOffset = this.config.thumbWidth;
-			var distance = (this.__targetElement.clientWidth - distanceOffset) / ((this.config.data.length - 1) / this.config.stepSize);
-			this.snap(distance * thumb.getValue().index);
-			this.onValueChanged(oldValue, thumb.getValue(), thumb);
-		},
-        
-        setMinValueByName: function(name) {
-			this.setValueByName(name, this.__thumbLeft);
-		},
-        
-        setMaxValueByName: function(name) {
-			this.setValueByName(name, this.__thumbRight);
 		},
 		
 		setOption: function(name, value) {
@@ -743,21 +726,8 @@
 		getMarkerByIndex: function(index) {
 			return {
 				index: index,
-				name: this.config.data[index].name,
-				item: this.config.data[index].item
+				data: this.config.data[index]
 			};
-		},
-		
-		getMarkerByName: function(name) {
-			for (var i = 0; i < this.config.data.length; i++) {
-				if (this.config.data[i].name === name) {
-					return {
-						index: i,
-						name: this.config.data[i].name,
-						item: this.config.data[i].item
-					};
-				}
-			}
 		},
 		
 		fire: function(eventName, args) {
