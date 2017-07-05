@@ -109,6 +109,7 @@
 	min-height: 14px;
 	position: relative;
 	margin: 5px 0px;
+    color: #000;
 }
 
 .rangeslide .labels-container .tick-label {
