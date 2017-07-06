@@ -96,37 +96,37 @@
 <script src="../dist/rangeslide.js"></script>
 <script>
 	var data1 = [
-		{ name: "2016", item: "This is some sample text associated with first item." },
-		{ name: "2017", item: "This is some sample text associated with second item." },
-		{ name: "2018", item: "This is some sample text associated with third item. It was returned from a function." },
-		{ name: "2019", item: function() { return "This is some sample text associated with fourth item. It was also returned from a function."; } },
-		{ name: "2020", item: "This is some sample text associated with fifth item." },
-		{ name: "2021", item: "This is some sample text associated with sixth item." },
-		{ name: "2022", item: "This is some sample text associated with the last item." }
+		{ key: "2016", value: "This is some sample text associated with first item." },
+		{ key: "2017", value: "This is some sample text associated with second item." },
+		{ key: "2018", value: "This is some sample text associated with third item. It was returned from a function." },
+		{ key: "2019", value: function() { return "This is some sample text associated with fourth item. It was also returned from a function."; } },
+		{ key: "2020", value: "This is some sample text associated with fifth item." },
+		{ key: "2021", value: "This is some sample text associated with sixth item." },
+		{ key: "2022", value: "This is some sample text associated with the last item." }
 	];
     
     var data2 = [
-		{ name: "Date1", item: new Date(2016, 5, 5, 12, 0 ) },
-		{ name: "Date2", item: new Date(2016, 6, 6, 13, 12) },
-        { name: "Date3", item: new Date(2016, 10, 22, 4, 5) },
-        { name: "Date4", item: new Date(2017, 1, 5, 16, 55) },
-        { name: "Date5", item: new Date(2017, 3, 11, 22, 22) },
-        { name: "Date6", item: new Date(2017, 4, 7, 6, 6) },
-        { name: "Date7", item: new Date(2017, 6, 13, 11, 14) },
+		{ key: "Date1", value: new Date(2016, 5, 5, 12, 0 ) },
+		{ key: "Date2", value: new Date(2016, 6, 6, 13, 12) },
+        { key: "Date3", value: new Date(2016, 10, 22, 4, 5) },
+        { key: "Date4", value: new Date(2017, 1, 5, 16, 55) },
+        { key: "Date5", value: new Date(2017, 3, 11, 22, 22) },
+        { key: "Date6", value: new Date(2017, 4, 7, 6, 6) },
+        { key: "Date7", value: new Date(2017, 6, 13, 11, 14) },
 	];
 	
 	var data3 = [
-		{ name: "off", item: "Turned off" },
-		{ name: "on", item: "Turned on" }
+		{ key: "off", value: "Turned off" },
+		{ key: "on", value: "Turned on" }
 	];
 	
 	var onChange = function(arguments) {
 		var presenter = document.getElementById("presenter");
-		if (typeof arguments.item === "string") {
-			presenter.innerHTML = "<b>#" + this.getElement().id + ":</b> " + arguments.item;
+		if (typeof arguments.value === "string") {
+			presenter.innerHTML = "<b>#" + this.getElement().id + ":</b> " + arguments.value;
 		}
-		else if (typeof arguments.item === "function") {
-			presenter.innerHTML = "<b>#" + this.getElement().id + ":</b> " + arguments.item();
+		else if (typeof arguments.value === "function") {
+			presenter.innerHTML = "<b>#" + this.getElement().id + ":</b> " + arguments.value();
 		}
 	};
 	
@@ -198,7 +198,7 @@
 		showLabels: false,
 		leftLabel: "off",
 		rightLabel: "on",
-		valueSource: "name",
+		valueSource: "key",
 		showValue: true,
 		sideLabelsWidth: 45,
 		handlers: {
@@ -210,7 +210,7 @@
 		showValue: true,
 		valuePosition: "above",
 		startPosition: 5,
-		valueSource: "name",
+		valueSource: "key",
 		thumbWidth: 26,
 		thumbHeight: 26,
 		showLabels: false,
@@ -281,7 +281,7 @@
         valueIndicatorWidth: 60,
 		valueIndicatorHeight: 20,
         highlightSelectedLabels: true,
-		valueSource: "name",
+		valueSource: "key",
 		showValue: true,
 		mode: "range"
 	});

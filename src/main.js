@@ -38,7 +38,7 @@
 		valueIndicatorWidth: 30,
 		valueIndicatorHeight: 30,
 		valuePosition: "above",
-		valueSource: "index"
+		valueSource: "key"
 	};
     
     function Thumb (value) {
@@ -192,6 +192,8 @@
 				this.__leftLabelElement = this.createSideLabel(this.config.leftLabel);
 				fragment.appendChild(this.__leftLabelElement);
 				this.__leftLabelElement.style.left = - this.config.sideLabelsWidth + "px";
+                this.__targetElement.style.marginLeft = this.config.sideLabelsWidth + "px";
+                this.__targetElement.style.marginRight = this.config.sideLabelsWidth + "px";
 			}
 			
 			if (this.config.rightLabel) {
@@ -474,7 +476,7 @@
 					return;
 				}
 			}
-			this.setValue(nextMarker);
+			this.setValue(nextMarker, this.__thumbLeft);
 		},
         
         getClosestThumbElement: function (positionX) {
@@ -557,7 +559,7 @@
 		
 		onValueChanged: function(previousValue, currentValue, thumb) {
 			if (this.config.showValue) {
-				thumb.getLabel().innerText = currentValue[this.config.valueSource];
+				thumb.getLabel().innerText = currentValue.data[this.config.valueSource];
 			}
 			if (this.config.highlightSelectedLabels) {
 				this.setActiveLabel(currentValue.index);
