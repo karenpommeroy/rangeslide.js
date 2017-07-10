@@ -14,79 +14,79 @@
 			<div>
 				<p>Here is basic range slider using default configuration:</p>
 			</div>
-			<div id="rangeslide1" class="rangeslide"></div>
+			<div id="rangeslide1" ></div>
 		</div>
 		<div class="example">
 			<div>
 				<p>We can change thumb size and show some labels:</p>
 			</div>
-			<div id="rangeslide2" class="rangeslide"></div>
+			<div id="rangeslide2" ></div>
 		</div>
 		<div class="example">
 			<div>
 				<p>Next lets show labels (with ticks) at the bottom and value indicator (on thumb by default):</p>
 			</div>
-			<div id="rangeslide3" class="rangeslide"></div>
+			<div id="rangeslide3" ></div>
 		</div>
 		<div class="example">
 			<div>
 				<p>It is also possible to show labels above and change value indicator appearance and placement:</p>
 			</div>
-			<div id="rangeslide4" class="rangeslide"></div>
+			<div id="rangeslide4" ></div>
 		</div>
 		<div class="example">
 			<div>
 				<p>We can even alternate labels placement (useful when it get's too crowded):</p>
 			</div>
-			<div id="rangeslide5" class="rangeslide"></div>
+			<div id="rangeslide5" ></div>
 		</div>
 		<div class="example">
 			<div>
 				<p>Range slider can as well be used as toggle button - just add some side labels:</p>
 			</div>
-			<div id="rangeslide6" class="rangeslide"></div>
+			<div id="rangeslide6" ></div>
 		</div>
 		<div class="example">
 			<div>
 				<p>Now let's change what is displayed in the indicator and show some markers on the track:</p>
 			</div>
-			<div id="rangeslide7" class="rangeslide"></div>
+			<div id="rangeslide7" ></div>
 		</div>
 		<div class="example">
 			<div>
 				<p>And let's make them a little more fancy by showing progress on markers:</p>
 			</div>
-			<div id="rangeslide8" class="rangeslide"></div>
+			<div id="rangeslide8" ></div>
 		</div>
 		<div class="example">
 			<div>
 				<p>Markers size can be altered and progress can also be idicated on the track itself:</p>
 			</div>
-			<div id="rangeslide9" class="rangeslide"></div>
+			<div id="rangeslide9" ></div>
 		</div>
 		<div class="example">
 			<div>
 				<p>Last but not least we can activate auto play mode (one time or loop):</p>
 			</div>
-			<div id="rangeslide10" class="rangeslide"></div>
+			<div id="rangeslide10" ></div>
 		</div>
         <div class="example">
 			<div>
 				<p>More thumbs on one slider:</p>
 			</div>
-			<div id="rangeslide11" class="rangeslide"></div>
+			<div id="rangeslide11" ></div>
 		</div>
         <div class="example">
 			<div>
-				<p>Rangeslide operating in selection mode:</p>
+				<p>Rangeslide operating in selection mode (click to select markers):</p>
 			</div>
-			<div id="rangeslide12" class="rangeslide"></div>
+			<div id="rangeslide12" ></div>
 		</div>
         <div class="example">
 			<div>
 				<p>Rangeslide with time data:</p>
 			</div>
-			<div id="rangeslide13" class="rangeslide"></div>
+			<div id="rangeslide13" ></div>
 		</div>
 	</div>
 	<div class="preview">
@@ -106,7 +106,7 @@
 	];
     
     var data2 = [
-		{ key: "Date1", value: new Date(2016, 5, 5, 12, 0 ) },
+		{ key: "Date1", value: new Date(2015, 11, 5, 12, 0 ) },
 		{ key: "Date2", value: new Date(2016, 6, 6, 13, 12) },
         { key: "Date3", value: new Date(2016, 10, 22, 4, 5) },
         { key: "Date4", value: new Date(2017, 1, 5, 16, 55) },
@@ -120,20 +120,19 @@
 		{ key: "on", value: "Turned on" }
 	];
 	
-	var onChange = function(arguments) {
+	var onChange = function(arg) {
 		var presenter = document.getElementById("presenter");
-		if (typeof arguments.value === "string") {
-			presenter.innerHTML = "<b>#" + this.getElement().id + ":</b> " + arguments.value;
-		}
-		else if (typeof arguments.value === "function") {
-			presenter.innerHTML = "<b>#" + this.getElement().id + ":</b> " + arguments.value();
-		}
+		presenter.innerHTML = "<b>#" + arg.index + ":</b> " + arg.data.key;
+		
 	};
 	
 	var rangeslide1 = rangeslide("#rangeslide1", {
 		data: data1,
 		thumbWidth: 36,
 		thumbHeight: 36,
+        dataSource: "value",
+        labelContent: "key",
+        valueIndicatorContent: "key",
 		handlers: {
 			"valueChanged": [onChange]
 		}
@@ -144,6 +143,9 @@
 		showLabels: true,
 		startPosition: 3,
 		showTicks: false,
+        dataSource: "value",
+        labelContent: "key",
+        valueIndicatorContent: "key",
 		thumbWidth: 14,
 		thumbHeight: 14,
 		handlers: {
@@ -156,6 +158,9 @@
 		showValue: true,
 		thumbWidth: 40,
 		thumbHeight: 30,
+        dataSource: "value",
+        labelContent: "key",
+        valueIndicatorContent: "key",
 		showLabels: true,
 		showTicks: true,
 		handlers: {
@@ -169,6 +174,9 @@
 		valuePosition: "below",
 		highlightSelectedLabels: true,
 		tickHeight: 10,
+        dataSource: "value",
+        labelContent: "key",
+        valueIndicatorContent: "key",
 		showLabels: true,
 		showTicks: true,
 		showValue: true,
@@ -185,6 +193,9 @@
 		showLabels: true,
 		startAlternateLabelsFromTop: false,
 		trackHeight: 20,
+        dataSource: "value",
+        labelContent: "key",
+        valueIndicatorContent: "key",
 		showTicks: true,
 		tickHeight: 30,
 		handlers: {
@@ -198,7 +209,9 @@
 		showLabels: false,
 		leftLabel: "off",
 		rightLabel: "on",
-		valueSource: "key",
+		dataSource: "value",
+        labelContent: "key",
+        valueIndicatorContent: "key",
 		showValue: true,
 		sideLabelsWidth: 45,
 		handlers: {
@@ -210,13 +223,15 @@
 		showValue: true,
 		valuePosition: "above",
 		startPosition: 5,
-		valueSource: "key",
 		thumbWidth: 26,
 		thumbHeight: 26,
 		showLabels: false,
 		valueIndicatorWidth: 60,
 		valueIndicatorHeight: 20,
 		showTrackMarkers: true,
+        dataSource: "value",
+        labelContent: "key",
+        valueIndicatorContent: "key",
 		handlers: {
 			"valueChanged": [onChange]
 		}
@@ -231,6 +246,9 @@
 		showTicks: true,
 		showTrackMarkers: true,
 		showTrackMarkersProgress: true,
+        dataSource: "value",
+        labelContent: "key",
+        valueIndicatorContent: "key",
 		handlers: {
 			"valueChanged": [onChange]
 		}
@@ -241,13 +259,16 @@
 		startPosition: 2,
 		showLabels: true,
 		labelsPosition: "above",
-		thumbHeight: 50,
-		thumbWidth: 20,
+		thumbHeight: 40,
+		thumbWidth: 15,
 		trackHeight: 4,
 		showTrackMarkers: true,
 		showTrackMarkersProgress: true,
 		showTrackProgress: true,
-		markerSize: 50,
+		markerSize: 40,
+        dataSource: "value",
+        labelContent: "key",
+        valueIndicatorContent: "key",
 		handlers: {
 			"valueChanged": [onChange]
 		}
@@ -265,6 +286,9 @@
 		showTrackMarkersProgress: true,
 		showTrackProgress: true,
 		markerSize: 16,
+        dataSource: "value",
+        labelContent: "key",
+        valueIndicatorContent: "key",
 		showValue: true
 	});
     
@@ -281,7 +305,9 @@
         valueIndicatorWidth: 60,
 		valueIndicatorHeight: 20,
         highlightSelectedLabels: true,
-		valueSource: "key",
+		dataSource: "value",
+        labelContent: "key",
+        valueIndicatorContent: "key",
 		showValue: true,
 		mode: "range"
 	});
@@ -290,6 +316,26 @@
 		data: data1,
 		mode: "select"
 	});
+    
+    var rangeslide13 = rangeslide("#rangeslide13", {
+		data: data2,
+        markerSize: 8,
+        trackHeight: 4,
+        thumbWidth: 8,
+        thumbHeight: 16,
+        showLabels: true,
+        showTooltips: true,
+        showTrackMarkers: true,
+        labelsPosition: "alternate",
+        dataSource: "value",
+        labelContent: function (data) {
+            return data.value.getDate() + "." + data.value.getMonth() + "." + data.value.getFullYear();
+        },
+        tooltipContent: function (data) {
+            var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            return weekday[data.value.getDay()];
+        }
+    });
     
 </script>
 </body>
