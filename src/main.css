@@ -113,13 +113,19 @@
     height: auto;
     background-color: #fff;
     border: 1px solid #e0e0e0;
-    color: #000;
+    color: #5a5a5a;
     padding: 5px;
-    position: relative;
-    bottom: 30px;
     font-size: 12px;
     transition-delay: 0s;
     transition: opacity 0.1s linear;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -150%);
+    -moz-transform: translate(-50%, -150%);
+    -ms-transform: translate(-50%, -150%);
+    transform: translate(-50%, -150%);
+    box-sizing: border-box;
 }
 
 .rangeslide .track-marker.tooltip .content {
