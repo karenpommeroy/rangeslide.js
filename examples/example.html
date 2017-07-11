@@ -84,7 +84,7 @@
 		</div>
         <div class="example">
 			<div>
-				<p>Rangeslide with time data:</p>
+				<p>Rangeslide with time data and freeslide mode:</p>
 			</div>
 			<div id="rangeslide13" ></div>
 		</div>
@@ -98,8 +98,8 @@
 	var data1 = [
 		{ key: "2016", value: "This is some sample text associated with first item." },
 		{ key: "2017", value: "This is some sample text associated with second item." },
-		{ key: "2018", value: "This is some sample text associated with third item. It was returned from a function." },
-		{ key: "2019", value: function() { return "This is some sample text associated with fourth item. It was also returned from a function."; } },
+		{ key: "2018", value: "This is some sample text associated with third item." },
+		{ key: "2019", value: "This is some sample text associated with fourth item." },
 		{ key: "2020", value: "This is some sample text associated with fifth item." },
 		{ key: "2021", value: "This is some sample text associated with sixth item." },
 		{ key: "2022", value: "This is some sample text associated with the last item." }
@@ -119,19 +119,33 @@
 		{ key: "off", value: "Turned off" },
 		{ key: "on", value: "Turned on" }
 	];
+    
+    var data4 = [
+		{ key: "Date1", value: new Date(2016, 0, 1, 0, 0 ) },
+		{ key: "Date2", value: new Date(2016, 2, 6, 13, 12) },
+        { key: "Date3", value: new Date(2016, 4, 22, 4, 5) },
+        { key: "Date4", value: new Date(2016, 7, 5, 16, 55) },
+        { key: "Date5", value: new Date(2016, 8, 11, 22, 22) },
+        { key: "Date6", value: new Date(2016, 10, 7, 6, 6) },
+        { key: "Date7", value: new Date(2016, 11, 31, 23, 59) },
+	];
+    
+    function pad(n) {
+        return n < 10 ? "0" + n : n;
+    }
 	
-	var onChange = function(arg) {
+	function onChange(arg) {
 		var presenter = document.getElementById("presenter");
-		presenter.innerHTML = "<b>#" + arg.index + ":</b> " + arg.data.key;
+		presenter.innerHTML = "<b>#" + arg.key + ":</b> " + arg.value;
 		
-	};
+	}
 	
 	var rangeslide1 = rangeslide("#rangeslide1", {
 		data: data1,
 		thumbWidth: 36,
 		thumbHeight: 36,
         dataSource: "value",
-        labelContent: "key",
+        labelsContent: "key",
         valueIndicatorContent: "key",
 		handlers: {
 			"valueChanged": [onChange]
@@ -144,7 +158,7 @@
 		startPosition: 3,
 		showTicks: false,
         dataSource: "value",
-        labelContent: "key",
+        labelsContent: "key",
         valueIndicatorContent: "key",
 		thumbWidth: 14,
 		thumbHeight: 14,
@@ -159,7 +173,7 @@
 		thumbWidth: 40,
 		thumbHeight: 30,
         dataSource: "value",
-        labelContent: "key",
+        labelsContent: "key",
         valueIndicatorContent: "key",
 		showLabels: true,
 		showTicks: true,
@@ -175,7 +189,7 @@
 		highlightSelectedLabels: true,
 		tickHeight: 10,
         dataSource: "value",
-        labelContent: "key",
+        labelsContent: "key",
         valueIndicatorContent: "key",
 		showLabels: true,
 		showTicks: true,
@@ -194,7 +208,7 @@
 		startAlternateLabelsFromTop: false,
 		trackHeight: 20,
         dataSource: "value",
-        labelContent: "key",
+        labelsContent: "key",
         valueIndicatorContent: "key",
 		showTicks: true,
 		tickHeight: 30,
@@ -210,7 +224,7 @@
 		leftLabel: "off",
 		rightLabel: "on",
 		dataSource: "value",
-        labelContent: "key",
+        labelsContent: "key",
         valueIndicatorContent: "key",
 		showValue: true,
 		sideLabelsWidth: 45,
@@ -230,7 +244,7 @@
 		valueIndicatorHeight: 20,
 		showTrackMarkers: true,
         dataSource: "value",
-        labelContent: "key",
+        labelsContent: "key",
         valueIndicatorContent: "key",
 		handlers: {
 			"valueChanged": [onChange]
@@ -247,7 +261,7 @@
 		showTrackMarkers: true,
 		showTrackMarkersProgress: true,
         dataSource: "value",
-        labelContent: "key",
+        labelsContent: "key",
         valueIndicatorContent: "key",
 		handlers: {
 			"valueChanged": [onChange]
@@ -267,7 +281,7 @@
 		showTrackProgress: true,
 		markerSize: 40,
         dataSource: "value",
-        labelContent: "key",
+        labelsContent: "key",
         valueIndicatorContent: "key",
 		handlers: {
 			"valueChanged": [onChange]
@@ -287,7 +301,7 @@
 		showTrackProgress: true,
 		markerSize: 16,
         dataSource: "value",
-        labelContent: "key",
+        labelsContent: "key",
         valueIndicatorContent: "key",
 		showValue: true
 	});
@@ -300,13 +314,14 @@
 		showTrackMarkersProgress: true,
         showTrackProgress: true,
         showLabels: true,
+        slideMode: "free",
         valuePosition: "above",
         showTicks: true,
         valueIndicatorWidth: 60,
 		valueIndicatorHeight: 20,
         highlightSelectedLabels: true,
-		dataSource: "value",
-        labelContent: "key",
+		dataSource: "key",
+        labelsContent: "key",
         valueIndicatorContent: "key",
 		showValue: true,
 		mode: "range"
@@ -324,14 +339,21 @@
         thumbWidth: 8,
         thumbHeight: 16,
         showLabels: true,
+        slideMode: "free",
         showTooltips: true,
+        showValue: true,
+        valueIndicatorContent: function (data) {
+            return pad(data.value.getDate()) + "/" + pad(data.value.getMonth() + 1) + " " + pad(data.value.getHours()) + ":" + pad(data.value.getMinutes());
+        },
+        valueIndicatorWidth: 80,
+        valueIndicatorOffset: 16,
         showTrackMarkers: true,
         labelsPosition: "alternate",
-        dataSource: "value",
-        labelContent: function (data) {
-            return data.value.getDate() + "." + data.value.getMonth() + "." + data.value.getFullYear();
+        dataSource: "value",        
+        labelsContent: function (data) {
+            return pad(data.value.getDate()) + "." + pad(data.value.getMonth() + 1) + "." + data.value.getFullYear();
         },
-        tooltipContent: function (data) {
+        tooltipsContent: function (data) {
             var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
             return weekday[data.value.getDay()];
         }
