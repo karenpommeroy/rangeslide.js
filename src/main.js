@@ -442,7 +442,7 @@ Rangeslide.prototype = {
     },
     
     __onLabelClicked: function(event) {
-        var positionX = event.currentTarget.offsetLeft + this.config.labelsWidth - this.config.thumbWidth;
+        var positionX = event.currentTarget.offsetLeft + this.config.labelsWidth - this.config.thumbWidth / 2;
         var index = parseInt(event.currentTarget.dataset.index);
         var thumb = this.__getClosestThumbElement(positionX);
         this.config.slideMode === "free" ? this.__place(positionX, thumb) : this.__snap(positionX);
