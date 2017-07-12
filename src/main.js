@@ -532,6 +532,8 @@ Rangeslide.prototype = {
     },
     
     __onUpdateMarkersProgress: function() {
+        if !(this.config.showTrackMarkers) return;
+        
         this.isRangeMode() ? this.__updateMarkerRange() : this.__updateMarkerProgress();
     },
     
