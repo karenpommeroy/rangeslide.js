@@ -3,7 +3,10 @@
   "version": "0.13.0",
   "description": "Lightweight customizable range slider with labels (but without jQuery)",
   "main": "dist/js/rangeslide.js",
-  "scripts": {},
+  "scripts": {
+    "build": "node ./node_modules/grunt/bin/grunt build",
+    "package": "node ./node_modules/grunt/bin/grunt package"
+  },
   "keywords": [
     "slide input",
     "sliding input",
@@ -21,12 +24,12 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "grunt": "^1.0.1",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-cssmin": "^2.2.0",
+    "grunt": "^1.0.4",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-cssmin": "^3.0.0",
     "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-uglify": "^3.0.1",
-    "grunt-umd": "^2.4.0"
+    "grunt-contrib-uglify": "^4.0.1",
+    "grunt-umd": "^3.0.0"
   },
   "dependencies": {}
 }

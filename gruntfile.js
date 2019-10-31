@@ -1,5 +1,5 @@
-module.exports = function(grunt) {    
-    
+module.exports = function(grunt) {
+
     this.uglifyOptions = {
 		dead_code: true,
 		conditionals: true,
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 		loops: true,
 		if_return: true
 	};
-	
+
 	grunt.initConfig({
         cssmin: {
 			dist: {
@@ -56,7 +56,7 @@ module.exports = function(grunt) {
                 compress: this.uglifyOptions
             }
         },
-        
+
         _clean: {
             build: {
                 src: ["dist/"]
@@ -71,10 +71,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-umd");
     grunt.renameTask("clean", "_clean");
 
-    var cleanTask = ["_clean"];
-    var buildTask = ["_clean", "concat", "cssmin", "umd", "uglify"];
-    
+	var cleanTask = ["_clean"];
+	var buildTask = ["_clean", "cssmin", "concat", "umd"];
+    var packageTask = ["_clean", "concat", "cssmin", "umd", "uglify"];
+
     grunt.registerTask("default", buildTask);
     grunt.registerTask("clean", cleanTask);
     grunt.registerTask("build", buildTask);
+    grunt.registerTask("package", packageTask);
 };
