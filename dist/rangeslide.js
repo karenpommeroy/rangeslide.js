@@ -1,8 +1,9 @@
 (function (root, factory) {
+  if (root === undefined && window !== undefined) root = window;
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module unless amdModuleId is set
     define([], function () {
-      return (factory());
+      return (root['rangeslide'] = factory());
     });
   } else if (typeof module === 'object' && module.exports) {
     // Node. Does not work with strict CommonJS, but
@@ -15,7 +16,7 @@
 }(this, function () {
 
 "use strict";
-	
+
 var MAX_THUMB_CLASS = "max-thumb",
     MIN_THUMB_CLASS = "min-thumb",
     RANGESLIDE_CLASS = "rangeslide";
@@ -73,66 +74,66 @@ function Thumb (value, index) {
     this.__index = index;
 };
 
-Thumb.prototype = {        
+Thumb.prototype = {
     getElement: function () {
         return this.__element;
     },
-    
+
     getLabel: function () {
         return this.__label;
     },
-    
+
     getValue: function () {
         return this.__value;
     },
-    
+
     getIndex: function () {
         return this.__index;
     },
-    
+
     setIndex: function (index) {
         this.__index = index;
     },
-    
+
     getRight: function () {
         return this.__element && this.__element.offsetLeft + this.__element.offsetWidth;
     },
-    
+
     getLeft: function () {
         return this.__element && this.__element.offsetLeft;
     },
-    
+
     setLeft: function (left) {
         this.__element.style.left = left + "px";
     },
-    
+
     setElement: function (element) {
         this.__element = element;
     },
-    
+
     setValue: function (value) {
         this.__value = value;
     },
-    
+
     addLabel: function (label) {
         this.__label = label;
         this.__element && this.__element.appendChild(label);
     },
-    
+
     hide: function () {
         if (!this.__element) return;
-        
+
         this.__element.style.display = "none";
     }
 };
-    
+
 function Rangeslide() {
     this.init.apply(this, arguments);
     this.fire("initialized", [this.__targetElement]);
 };
 
 Rangeslide.prototype = {
-    
+
     init: function (target, config) {
         this.__onThumbMouseMove = this.__onThumbMouseMove.bind(this);
         this.__onThumbMouseUp = this.__onThumbMouseUp.bind(this);
@@ -143,7 +144,7 @@ Rangeslide.prototype = {
         this.__onThumbTransitionEnd = this.__onThumbTransitionEnd.bind(this);
         this.__onUpdateMarkersProgress = this.__onUpdateMarkersProgress.bind(this);
         this.__onMouseWheel = this.__onMouseWheel.bind(this);
-        
+
         this.config = Object.assign({}, defaults, config)
         this.__valuesStore = {};
         this.__adjustConfiguration(config);
@@ -164,18 +165,18 @@ Rangeslide.prototype = {
         this.__thumbLeft = new Thumb(this.getMarkerByIndex(this.config.startPosition), this.config.startPosition);
         this.__thumbRight = new Thumb(this.getMarkerByIndex(this.config.endPosition), this.config.endPosition);
         this.__previousValue;
-        
+
         this.__checkIfTargetIsValid(target);
         this.__setAutoPlay(this.config.autoPlay);
         this.__targetElement.classList.add(RANGESLIDE_CLASS);
         this.__targetElement.appendChild(this.__createUI());
         this.__setThumbsInitialPositions();
-        
+
         if (this.config.mouseWheel) {
             this.__attachMouseWheelHandlers();
         }
     },
-    
+
     refresh: function() {
         this.__storeValues();
         this.destroy();
@@ -188,86 +189,86 @@ Rangeslide.prototype = {
         this.setMaxValueByIndex(this.__thumbRight.getIndex());
         this.fire("refreshed", [this.__targetElement]);
     },
-    
+
     destroy: function() {
         clearInterval(this.__markersUpdateInterval);
         clearInterval(this.__playInterval);
         this.__detachMouseWheelHandlers();
-        
+
         while (this.__targetElement.lastChild) {
             this.__targetElement.removeChild(this.__targetElement.lastChild);
         }
-        
+
         this.fire("destroyed", [this.__targetElement]);
     },
-    
+
     getElement: function() {
         return this.__targetElement;
     },
-    
+
     getValue: function() {
         if (this.isRangeMode()) return this.getRange();
         else if (this.isSelectMode()) return this.getSelection();
         else return this.__thumbLeft.getValue();
     },
-    
+
     getMinValue: function() {
         if (this.isSelectMode()) return null;
         return this.__thumbLeft.getValue();
     },
-    
+
     getMaxValue: function() {
         if (this.isSingleMode()) return this.__thumbLeft.getValue();
         else if (this.isSelectMode()) return null;
-        
+
         return this.__thumbRight.getValue();
     },
-    
+
     getRange: function() {
         if (this.isSingleMode() || this.isSelectMode()) return [];
 
         return [this.__thumbLeft.getValue(), this.__thumbRight.getValue()];
     },
-    
+
     getSelection: function() {
         if (this.isSingleMode() || this.isRangeMode()) return [];
-        
+
         var selectedElements = this.__targetElement.querySelectorAll(".track-marker.selected"),
             selectSet = [];
-        
+
         for (var i = 0; i < selectedElements.length; i++) {
             selectSet.push(this.config.data[parseInt(selectedElements[i].dataset.index)]);
         }
-        
+
         return selectSet;
     },
-    
+
     setValue: function(value, thumb) {
-        var oldValue = thumb.getValue(); 
+        var oldValue = thumb.getValue();
         var offset = this.__getPositionFromValue(value);
         thumb.setValue(value);
         this.__snap(offset);
         this.__onValueChanged(oldValue, thumb.getValue(), thumb);
     },
-    
-    
+
+
     setMinValue: function(value) {
         if (this.isSelectMode()) return;
-        
+
         this.setValue(value, this.__thumbLeft);
     },
-    
+
     setMaxValue: function(value) {
         if (this.isSingleMode()) return this.setValue(value, this.__thumbLeft);
         else if (this.isSelectMode()) return;
-        
+
         this.setValue(value, this.__thumbRight);
     },
-    
+
     setValueByIndex: function(index, thumb) {
         if (index < 0 || index > this.config.data.length -1) return;
-        
-        var oldValue = thumb.getValue(); 
+
+        var oldValue = thumb.getValue();
         thumb.setValue(this.getMarkerByIndex(index));
         thumb.setIndex(index);
         var distanceOffset = this.config.thumbWidth;
@@ -275,7 +276,7 @@ Rangeslide.prototype = {
         this.__snap(distance * index, thumb);
         this.__onValueChanged(oldValue, thumb.getValue(), thumb);
     },
-    
+
     setValueByAttribute: function(attributeName, attributeValue) {
         var l = this.config.data.length;
         while (l--) {
@@ -285,22 +286,22 @@ Rangeslide.prototype = {
         }
         this.setValueByIndex(l - 1, this.__thumbLeft);
     },
-    
+
     setMinValueByIndex: function(index) {
         if (this.isSelectMode()) return;
         if (index < 0) return;
 
         this.setValueByIndex(index, this.__thumbLeft);
     },
-    
+
     setMaxValueByIndex: function(index) {
         if (this.isSingleMode()) return this.setValueByIndex(index, this.__thumbLeft);
         if (this.isSelectMode()) return;
         if (index > this.config.data.length -1) return;
-        
+
         this.setValueByIndex(index, this.__thumbRight);
     },
-    
+
     setMinValueByAttribute: function (attributeName, attributeValue) {
         if (this.isSelectMode()) return;
         var l = this.config.data.length;
@@ -311,7 +312,7 @@ Rangeslide.prototype = {
         }
         this.setMinValueByIndex(l - 1, this.__thumbLeft);
     },
-    
+
     setMaxValueByAttribute: function (attributeName, attributeValue) {
         if (this.isSelectMode()) return;
         var l = this.config.data.length;
@@ -321,44 +322,44 @@ Rangeslide.prototype = {
             }
         }
         if (this.isSingleMode()) return this.setValueByIndex(l - 1, this.__thumbLeft);
-        
+
         this.setMinValueByIndex(l - 1, this.__thumbRight);
     },
-    
+
     setOption: function(name, value) {
         this.config[name] = value;
         this.refresh();
     },
-    
+
     isSingleMode: function() {
         return this.config.mode === "single";
     },
-    
+
     isRangeMode: function() {
         return this.config.mode === "range";
     },
-    
+
     isSelectMode: function() {
         return this.config.mode === "select";
     },
-    
+
     __hasValueChanged: function() {
         var previous = this.__previousValue;
-        var current = { 
+        var current = {
             min: this.__thumbLeft.getValue(),
             max: this.__thumbRight && this.__thumbRight.getValue()
         };
-        
+
         return JSON.stringify(previous) !== JSON.stringify(current);
     },
-    
+
     __getClosestThumbElement: function (positionX) {
         var leftDistance = Math.abs(this.__thumbLeft.getRight() - positionX),
             rightDistance = Math.abs(this.__thumbRight.getLeft() - positionX);
-            
+
         return leftDistance > rightDistance ? this.__thumbRight : this.__thumbLeft;
     },
-    
+
     __storeValues: function () {
         this.__valuesStore = {
             leftThumbValue: this.__thumbLeft.getValue(),
@@ -366,7 +367,7 @@ Rangeslide.prototype = {
             rightThumbValue: this.__thumbRight.getValue(),
             rightThumbLeft: this.__thumbRight.getLeft()
         };
-    },      
+    },
 
     __loadStoredValues: function() {
         if (Object.keys(this.__valuesStore).length === 0 && this.__valuesStore.constructor === Object) return;
@@ -378,7 +379,7 @@ Rangeslide.prototype = {
             this.__thumbRight.setLeft(this.__valuesStore.rightThumbLeft);
         }
     },
-    
+
     __setActiveLabel: function (index) {
         var previouslyActiveLabel = this.__targetElement.querySelector(".tick-label.selected");
         var currentlyActiveLabel = this.__targetElement.querySelector("#" + this.__targetElement.id + "_label" + index);
@@ -389,10 +390,10 @@ Rangeslide.prototype = {
             currentlyActiveLabel.classList.add("selected");
         }
     },
-    
+
     __goToNextMarker: function() {
         if (this.isRangeMode()) return;
-        
+
         var nextMarker = this.__thumbLeft.getIndex() + 1;
         if (this.config.loop) {
             if (nextMarker > this.config.data.length - 1) {
@@ -407,14 +408,14 @@ Rangeslide.prototype = {
         }
         this.setValueByIndex(nextMarker, this.__thumbLeft);
     },
-    
+
     __getThumbStart: function(thumbElement) {
         return isNaN(parseFloat(thumbElement.style.left)) ? 0 : parseFloat(thumbElement.style.left);
     },
-    
+
     __setAutoPlay: function(value) {
         if (this.isRangeMode()) return;
-        
+
         if(!value) {
             clearInterval(this.__playInterval);
             this.fire("playStop", [this.__thumbLeft.getValue(), this.__targetElement]);
@@ -423,11 +424,11 @@ Rangeslide.prototype = {
         this.__playInterval = setInterval(this.__goToNextMarker.bind(this), this.config.autoPlayDelay);
         this.fire("playStart", [this.__thumbLeft.getValue(), this.__targetElement]);
     },
-    
+
     __markElementAsSelected: function (element) {
         element.classList.toggle("selected");
     },
-    
+
     __onValueChanged: function(previousValue, currentValue, thumb) {
         if (this.config.showValue) {
             thumb.getLabel().innerText = this.__getValueContent(currentValue);
@@ -451,12 +452,12 @@ Rangeslide.prototype = {
             }
         }
     },
-    
+
     __onTrackClicked: function(event) {
         this.config.slideMode === "free" ? this.__place(event.offsetX) : this.__snap(event.offsetX);
         this.fire("trackClicked", [this.__thumbLeft.getValue(), event.currentTarget]);
     },
-    
+
     __onLabelClicked: function(event) {
         var positionX = event.currentTarget.offsetLeft + this.config.labelsWidth - this.config.thumbWidth / 2;
         var index = parseInt(event.currentTarget.dataset.index);
@@ -464,7 +465,7 @@ Rangeslide.prototype = {
         this.config.slideMode === "free" ? this.__place(positionX, thumb) : this.__snap(positionX);
         this.fire("labelClicked", [thumb.getValue(), event.currentTarget]);
     },
-    
+
     __onMarkerClicked: function(event) {
         if(this.isSelectMode()) {
             this.__markElementAsSelected(event.currentTarget);
@@ -479,7 +480,7 @@ Rangeslide.prototype = {
         event.preventDefault();
         event.stopPropagation();
     },
-    
+
     __onThumbMouseDown: function(event) {
         this.__mouseStartPositionX = event.pageX;
         var thumb = this.__getThumbFromElement(event.currentTarget);
@@ -490,7 +491,7 @@ Rangeslide.prototype = {
         window.addEventListener("mousemove", this.__onThumbMouseMove);
         window.addEventListener("mouseup", this.__onThumbMouseUp);
     },
-    
+
     __onThumbMouseUp: function(event) {
         var thumb = this.__draggedThumb;
         thumb.start = this.__getThumbStart(thumb.getElement());
@@ -501,12 +502,12 @@ Rangeslide.prototype = {
         window.removeEventListener("mousemove", this.__onThumbMouseMove);
         window.removeEventListener("mouseup", this.__onThumbMouseUp);
     },
-    
+
     __onThumbMouseMove: function(event) {
         var thumb = this.__draggedThumb;
         var difference = - 1 * (this.__mouseStartPositionX - event.pageX);
         var newLeft = thumb.start + difference;
-        if(this.isRangeMode() && this.areThumbsTooClose()) { 
+        if(this.isRangeMode() && this.areThumbsTooClose()) {
             if (thumb.getElement().classList.contains(MAX_THUMB_CLASS)) {
                 if (newLeft < thumb.getLeft()) return;
             }
@@ -514,7 +515,7 @@ Rangeslide.prototype = {
                 if (newLeft > thumb.getLeft()) return;
             }
         }
-        
+
         if(!this.isPositionOutOfBounds(newLeft)) {
             thumb.setLeft(newLeft);
         }
@@ -536,7 +537,7 @@ Rangeslide.prototype = {
         this.__onUpdateMarkersProgress()
         this.fire("thumbDragged", [thumb.getValue(), thumb.getElement()]);
     },
-    
+
     __onThumbTransitionEnd: function(event) {
         event.target.removeEventListener(event.type, this.__onThumbTransitionEnd);
         event.target.classList.remove("animated");
@@ -546,11 +547,13 @@ Rangeslide.prototype = {
         }
         this.__trackProgressElement.classList.remove("animated");
     },
-    
+
     __onUpdateMarkersProgress: function() {
+        if (!this.config.showTrackMarkers) return;
+
         this.isRangeMode() ? this.__updateMarkerRange() : this.__updateMarkerProgress();
     },
-    
+
     __checkIfTargetIsValid: function(target) {
         if (!target) {
             throw new Error("Missing required attribute: target element (css selector or DOM node) must be provided");
@@ -565,12 +568,12 @@ Rangeslide.prototype = {
             throw new Error("Incorrect type: target element must be DOM node or string css selector");
         }
     },
-    
+
     __onMouseWheel: function (event) {
         var event = window.event || event;
         var delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
         delta = delta < 0 ? -1 : 1;
-        
+
         if (this.isSingleMode()) {
             this.setValueByIndex(this.__thumbLeft.getIndex() + delta, this.__thumbLeft);
         }
@@ -581,14 +584,14 @@ Rangeslide.prototype = {
 
         return false;
     },
-    
+
     __place: function (positionX, thumb, noAnimation) {
         var closestThumbElement = this.isRangeMode() ? thumb || this.__getClosestThumbElement(positionX) : this.__thumbLeft;
         var newValue = {};
         newValue[this.config.dataSource] = this.__getValueAtPosition(positionX);
         this.config.animations && !noAnimation && closestThumbElement.getElement().classList.add("animated");
         closestThumbElement.setLeft(positionX);
-        
+
         if (this.config.showTrackMarkersProgress) {
             if (!this.config.animations || noAnimation) {
                 this.__onUpdateMarkersProgress();
@@ -599,7 +602,7 @@ Rangeslide.prototype = {
                 this.__markersUpdateInterval = setInterval(this.__onUpdateMarkersProgress, 20);
             }
         }
-        
+
         if (this.config.showTrackProgress) {
             this.config.animations && !noAnimation && this.__trackProgressElement.classList.add("animated");
             if (this.isRangeMode()) {
@@ -615,21 +618,21 @@ Rangeslide.prototype = {
             else {
                 this.__trackProgressElement.style.width = positionX + "px";
             }
-        }				
-        
-        if (this.config.animations && !noAnimation) { 
+        }
+
+        if (this.config.animations && !noAnimation) {
             closestThumbElement.getElement().addEventListener("webkitTransitionEnd", this.__onThumbTransitionEnd);
             closestThumbElement.getElement().addEventListener("otransitionend", this.__onThumbTransitionEnd);
             closestThumbElement.getElement().addEventListener("oTransitionEnd", this.__onThumbTransitionEnd);
             closestThumbElement.getElement().addEventListener("msTransitionEnd", this.__onThumbTransitionEnd);
             closestThumbElement.getElement().addEventListener("transitionend", this.__onThumbTransitionEnd);
         }
-        
+
         var prevValue = closestThumbElement.getValue();
         closestThumbElement.setValue(newValue);
         this.__onValueChanged(prevValue, newValue, closestThumbElement);
     },
-    
+
     __snap: function (positionX, thumb, noAnimation) {
         if (this.config.spacing === "data-driven") {
             var closestThumbElement = this.isRangeMode() ? thumb || this.__getClosestThumbElement(positionX) : this.__thumbLeft;
@@ -639,14 +642,14 @@ Rangeslide.prototype = {
             this.config.animations && !noAnimation && closestThumbElement.getElement().classList.add("animated");
             closestThumbElement.setLeft(newLeft);
             nextMarker = parseInt(closestMarker.dataset.index);
-            
+
         }
         else {
             var distance = this.__getDistanceBetweenItems();
             var closestThumbElement = this.isRangeMode() ? thumb || this.__getClosestThumbElement(positionX) : this.__thumbLeft;
-            
+
             this.config.animations && !noAnimation && closestThumbElement.getElement().classList.add("animated");
-            
+
             var progressToNextMarker = (positionX / distance) % 1;
             var nextMarker;
             var newLeft = "0px";
@@ -678,7 +681,7 @@ Rangeslide.prototype = {
                 this.__markersUpdateInterval = setInterval(this.__onUpdateMarkersProgress, 20);
             }
         }
-        
+
         if (this.config.showTrackProgress) {
             this.config.animations && !noAnimation && this.__trackProgressElement.classList.add("animated");
             if (this.isRangeMode()) {
@@ -694,36 +697,36 @@ Rangeslide.prototype = {
             else {
                 this.__trackProgressElement.style.width = newLeft + "px";
             }
-        }				
-        
-        if (this.config.animations && !noAnimation) { 
+        }
+
+        if (this.config.animations && !noAnimation) {
             closestThumbElement.getElement().addEventListener("webkitTransitionEnd", this.__onThumbTransitionEnd);
             closestThumbElement.getElement().addEventListener("otransitionend", this.__onThumbTransitionEnd);
             closestThumbElement.getElement().addEventListener("oTransitionEnd", this.__onThumbTransitionEnd);
             closestThumbElement.getElement().addEventListener("msTransitionEnd", this.__onThumbTransitionEnd);
             closestThumbElement.getElement().addEventListener("transitionend", this.__onThumbTransitionEnd);
         }
-        
+
         var nextValue = this.getMarkerByIndex(nextMarker);
         var prevValue = closestThumbElement.getValue();
         closestThumbElement.setValue(nextValue);
         this.__onValueChanged(prevValue, nextValue, closestThumbElement);
     },
-    
+
     __createUI: function() {
         var fragment = document.createDocumentFragment();
         this.__trackElement = this.__createTrackElement();
         this.__trackProgressElement = this.__createTrackProgressElement();
         this.__thumbLeft.setElement(this.__createThumbElement(MIN_THUMB_CLASS));
         this.isRangeMode() && this.__thumbRight.setElement(this.__createThumbElement(MAX_THUMB_CLASS));
-       
+
         this.__sliderElement = this.__createSliderElement(this.__trackElement, this.__trackProgressElement, [
             this.__thumbLeft.getElement(),
             this.__thumbRight.getElement()
         ]);
-        
+
         fragment.appendChild(this.__sliderElement);
-        
+
         if (this.config.showLabels) {
             if (this.config.labelsPosition === "above") {
                 this.__labelContainerElement = this.__createLabelsElement();
@@ -744,26 +747,26 @@ Rangeslide.prototype = {
                 fragment.appendChild(this.__labelContainerElement);
             }
         }
-        
+
         if (this.config.showValue) {
             this.__thumbLeft.addLabel(this.__createValueElement());
             this.isRangeMode() && this.__thumbRight.addLabel(this.__createValueElement());
         }
-        
+
         if (this.config.leftLabel) {
             this.__leftLabelElement = this.__createSideLabel(this.config.leftLabel);
             fragment.appendChild(this.__leftLabelElement);
             this.__leftLabelElement.style.left = - this.config.sideLabelsWidth + "px";
             this.__targetElement.style.marginLeft = this.config.sideLabelsWidth + "px";
         }
-        
+
         if (this.config.rightLabel) {
             this.__rightLabelElement = this.__createSideLabel(this.config.rightLabel);
             fragment.appendChild(this.__rightLabelElement);
             this.__rightLabelElement.style.right = - this.config.sideLabelsWidth + "px";
             this.__targetElement.style.marginRight = this.config.sideLabelsWidth + "px";
         }
-        
+
         if (this.config.showTrackMarkers) {
             this.__trackMarkerElements = this.__createTrackMarkers();
             var l = this.__trackMarkerElements.length;
@@ -775,10 +778,10 @@ Rangeslide.prototype = {
             this.__thumbLeft.hide();
             this.__thumbRight.hide();
         }
-        
+
         return fragment;
     },
-    
+
     __createTrackElement: function() {
         var trackElement = document.createElement("div");
         trackElement.className = "track noselect" + (this.config.animations ? " animated" : "");
@@ -786,16 +789,16 @@ Rangeslide.prototype = {
         if (this.config.enableTrackClick) {
             trackElement.onclick = this.__onTrackClicked;
         }
-        return trackElement; 
+        return trackElement;
     },
-    
+
     __createTrackProgressElement: function() {
         var trackProgressElement = document.createElement("div");
         trackProgressElement.className = "track-progress noselect";
         trackProgressElement.style.height = this.config.trackHeight + "px";
-        return trackProgressElement; 
+        return trackProgressElement;
     },
-    
+
     __createThumbElement: function(className) {
         var thumbElement = document.createElement("div");
         thumbElement.className = "thumb noselect " + className;
@@ -803,9 +806,9 @@ Rangeslide.prototype = {
         thumbElement.style.marginTop = - this.config.thumbHeight / 2 - this.config.trackHeight / 2 + "px";
         thumbElement.style.height = this.config.thumbHeight + "px";
         thumbElement.onmousedown = this.__onThumbMouseDown;
-        return thumbElement; 
+        return thumbElement;
     },
-    
+
     __createSideLabel: function(labelText) {
         var labelElement = document.createElement("div");
         labelElement.innerText = labelText;
@@ -813,7 +816,7 @@ Rangeslide.prototype = {
         labelElement.style.width = this.config.sideLabelsWidth + "px";
         return labelElement;
     },
-    
+
     __createSliderElement: function(trackElement, trackProgressElement, thumbElements) {
         var sliderElement = document.createElement("div");
         var l = thumbElements.length;
@@ -825,7 +828,7 @@ Rangeslide.prototype = {
         }
         return sliderElement;
     },
-    
+
     __createValueElement: function() {
         var valueElement = document.createElement("div");
         valueElement.className = "value-indicator noselect";
@@ -840,7 +843,7 @@ Rangeslide.prototype = {
             valueElement.style.lineHeight = this.config.valueIndicatorHeight + "px";
             valueElement.style.left = - this.config.valueIndicatorWidth / 2 + this.config.thumbWidth / 2 + "px";
         }
-        
+
         if (this.config.valueIndicatorPosition === "above") {
             valueElement.style.top = - this.config.valueIndicatorHeight / 2 - this.config.thumbHeight / 2 - this.config.trackHeight - this.config.valueIndicatorOffset + "px";
             valueElement.classList.add("above");
@@ -851,20 +854,20 @@ Rangeslide.prototype = {
         }
         return valueElement;
     },
-    
+
     __createLabelsElement: function() {
         var labelsElement = document.createElement("div");
         labelsElement.className = "labels-container noselect";
         return labelsElement;
     },
-    
+
     __createLabels: function (parent, everyOtherLabel, skipFirst, labelsBeforeTicks) {
         var labelOffset = this.config.labelsWidth / (everyOtherLabel ? 1 : 2) - this.config.thumbWidth / 2;
         var distanceOffset = this.config.thumbWidth;
         var total = this.config.data.length - 1;
         var half = total / 2;
         var distance = this.__getSmallestDistance(distanceOffset);
-        for (var i = skipFirst ? 1 : 0; i <= total; everyOtherLabel ? i += 2 : i++) {				
+        for (var i = skipFirst ? 1 : 0; i <= total; everyOtherLabel ? i += 2 : i++) {
             var labelElement = document.createElement("div");
             labelElement.className = "tick-label noselect";
             labelElement.style.width = this.config.labelsWidth * (everyOtherLabel ? 2 : 1) + "px";
@@ -901,7 +904,7 @@ Rangeslide.prototype = {
             parent.style.height = 14 + (this.config.showTicks ? this.config.tickHeight : 0) + "px";
         }
     },
-    
+
     __createTrackMarkers: function () {
         var markerOffset = this.config.markerSize / 2 - this.config.thumbWidth / 2;
         var distanceOffset = this.config.thumbWidth;
@@ -910,7 +913,7 @@ Rangeslide.prototype = {
         var half = total / 2;
         var distance = this.__getSmallestDistance(distanceOffset);
         var markers = [];
-        while (l--) {				
+        while (l--) {
             var markerElement = document.createElement("div");
             markerElement.className = "track-marker noselect";
             markerElement.dataset.index = l;
@@ -930,13 +933,13 @@ Rangeslide.prototype = {
             }
             markers.push(markerElement);
         }
-        
+
         if (this.config.showTooltips) {
             this.__attachTooltips(markers);
         }
         return markers;
     },
-    
+
     __attachMouseWheelHandlers: function() {
         if (this.__targetElement.addEventListener) {
             this.__targetElement.addEventListener("mousewheel", this.__onMouseWheel, false);
@@ -946,7 +949,7 @@ Rangeslide.prototype = {
             this.__targetElement.attachEvent("onmousewheel", this.__onMouseWheel);
         }
     },
-    
+
     __detachMouseWheelHandlers: function() {
         if (this.__targetElement.removeEventListener) {
             this.__targetElement.removeEventListener("mousewheel", this.__onMouseWheel, false);
@@ -956,7 +959,7 @@ Rangeslide.prototype = {
             this.__targetElement.detachEvent("onmousewheel", this.__onMouseWheel);
         }
     },
-    
+
     __attachTooltips: function (markers) {
         var l = markers.length;
         while (l--) {
@@ -967,7 +970,7 @@ Rangeslide.prototype = {
             markers[l].appendChild(tooltipElement);
         }
     },
-    
+
     __getDataContent: function (item) {
         if (this.__isString(this.config.dataSource)) {
             return item[this.config.dataSource];
@@ -979,7 +982,7 @@ Rangeslide.prototype = {
             return item;
         }
     },
-    
+
     __getlabelsContent: function (item) {
         if (this.__isString(this.config.labelsContent)) {
             return item[this.config.labelsContent];
@@ -991,7 +994,7 @@ Rangeslide.prototype = {
             return item;
         }
     },
-    
+
     __getValueContent: function (item) {
         if (this.__isString(this.config.valueIndicatorContent)) {
             return item[this.config.valueIndicatorContent];
@@ -1003,7 +1006,7 @@ Rangeslide.prototype = {
             return item;
         }
     },
-    
+
     __getTooltipsContent: function (item) {
         if (this.__isString(this.config.tooltipsContent)) {
             return item[this.config.tooltipsContent];
@@ -1015,34 +1018,34 @@ Rangeslide.prototype = {
             return item;
         }
     },
-    
+
     __getValueAtPosition: function (positionX) {
         var result;
         var minValue = Math.min.apply(Math, (this.config.data.map(function (item) { return this.__getDataContent(item); }.bind(this))));
         var maxValue = Math.max.apply(Math, (this.config.data.map(function (item) { return this.__getDataContent(item); }.bind(this))));
         var valueSpan = Math.abs(maxValue - minValue);
-        
-        var minValueInPixels = this.__trackMarkerElements[0].offsetLeft;
-        var maxValueInPixels = this.__trackMarkerElements[this.config.data.length - 1].offsetLeft;
+
+        var minValueInPixels = (this.__trackMarkerElements && this.__trackMarkerElements[0].offsetLeft) || 0;
+        var maxValueInPixels = (this.__trackMarkerElements && this.__trackMarkerElements[this.config.data.length - 1].offsetLeft) || 0;
         var pixelSpan = Math.abs(minValueInPixels - maxValueInPixels);
-        
+
         result = minValue + valueSpan * positionX / pixelSpan;
 
         return this.__isDataTemporal() ? new Date(result) : result;
     },
-    
+
     __getPositionFromValue: function (value) {
         var parsedValue,
             position;
-            
+
         var minValue = Math.min.apply(Math, (this.config.data.map(function (item) { return this.__getDataContent(item); }.bind(this))));
         var maxValue = Math.max.apply(Math, (this.config.data.map(function (item) { return this.__getDataContent(item); }.bind(this))));
         var valueSpan = Math.abs(maxValue - minValue);
-        
-        var minValueInPixels = this.__trackMarkerElements[0].offsetLeft;
-        var maxValueInPixels = this.__trackMarkerElements[this.config.data.length - 1].offsetLeft;
+
+        var minValueInPixels = (this.__trackMarkerElements && this.__trackMarkerElements[0].offsetLeft) || 0;
+        var maxValueInPixels = (this.__trackMarkerElements && this.__trackMarkerElements[this.config.data.length - 1].offsetLeft) || 0;
         var pixelSpan = Math.abs(minValueInPixels - maxValueInPixels);
-        
+
         if (this.__isNumeric(value)) {
             parsedValue = value;
             position = minValueInPixels + pixelSpan * parsedValue / valueSpan;
@@ -1058,27 +1061,27 @@ Rangeslide.prototype = {
         else if (!this.__isSet(parsedValue)) {
             position = 0;
         }
-        
+
         return position;
     },
-    
+
     __getDistanceBetweenItems: function () {
         var distanceOffset = this.config.thumbWidth;
         return (this.__targetElement.clientWidth - distanceOffset) / ((this.config.data.length - 1) / this.config.stepSize);
     },
-    
+
     __getClosestMarker: function (positionX) {
         var distanceOffset = this.config.thumbWidth;
         var l = this.config.data.length;
         var closestMarker;
         while (l--) {
             if (!closestMarker || Math.abs(this.__trackMarkerElements[l].offsetLeft - positionX) < Math.abs(closestMarker.offsetLeft - positionX)) {
-                closestMarker = this.__trackMarkerElements[l];
+                closestMarker = this.__trackMarkerElements && this.__trackMarkerElements[l];
             }
         }
         return closestMarker;
     },
-    
+
     __adjustConfiguration: function (config) {
         var total = this.config.data.length - 1;
         this.config.endPosition = this.config.endPosition > total ? total : this.config.endPosition;
@@ -1089,12 +1092,12 @@ Rangeslide.prototype = {
         else if (this.isSelectMode()) {
             this.config.showTrackMarkers = true;
         }
-        
+
         if (this.__isDataTemporal() && !config.spacing) {
             this.config.spacing = "data-driven";
         }
     },
-    
+
     __isDataTemporal: function() {
         var l = this.config.data.length;
         while (l--) {
@@ -1105,7 +1108,7 @@ Rangeslide.prototype = {
         }
         return true;
     },
-    
+
     __getThumbFromElement: function (element) {
         if (element.classList.contains(MAX_THUMB_CLASS)) {
             return this.__thumbRight;
@@ -1114,21 +1117,21 @@ Rangeslide.prototype = {
             return this.__thumbLeft;
         }
     },
-    
+
     __getSmallestDistance: function(offset) {
         if (this.config.spacing === "data-driven") {
             var minDate = Math.min.apply(Math, (this.config.data.map(function (item) { return this.__getDataContent(item); }.bind(this))));
             var maxDate = Math.max.apply(Math, (this.config.data.map(function (item) { return this.__getDataContent(item); }.bind(this))));
             var difference = Math.abs(maxDate - minDate) / 1000;
-            
+
             return "((100% - " + offset + "px) / " + difference + ")";
         }
         else {
             return "((100% - " + offset + "px) / " + (this.config.data.length - 1) + ")";
         }
     },
-    
-    __getDistance: function (value) {           
+
+    __getDistance: function (value) {
         if (this.config.spacing === "data-driven") {
             var minDate = Math.min.apply(Math, (this.config.data.map(function (item) { return this.__getDataContent(item); }.bind(this))));
             return Math.abs(value - minDate) / 1000;
@@ -1137,7 +1140,7 @@ Rangeslide.prototype = {
             return 0;
         }
     },
-    
+
     __setThumbsInitialPositions: function () {
         var distanceOffset = this.config.thumbWidth;
         var distance = (this.__targetElement.clientWidth - distanceOffset) / ((this.config.data.length - 1) / this.config.stepSize);
@@ -1147,9 +1150,9 @@ Rangeslide.prototype = {
             this.__snap(distance * this.config.endPosition, this.__thumbRight, true);
         }
     },
-    
+
     __updateMarkerProgress: function() {
-        var l = this.__trackMarkerElements.length;
+        var l = this.__trackMarkerElements && this.__trackMarkerElements.length;
         while (l--) {
             if (this.__trackMarkerElements[l].offsetLeft <= this.__thumbLeft.getLeft()) {
                 this.__trackMarkerElements[l].classList.add("completed");
@@ -1159,9 +1162,9 @@ Rangeslide.prototype = {
             }
         }
     },
-    
+
     __updateMarkerRange: function() {
-        var l = this.__trackMarkerElements.length;
+        var l = this.__trackMarkerElements && this.__trackMarkerElements.length;
         while (l--) {
             if (this.__trackMarkerElements[l].offsetLeft >= this.__thumbLeft.getLeft() && this.__trackMarkerElements[l].offsetLeft <= this.__thumbRight.getRight()) {
                 this.__trackMarkerElements[l].classList.add("completed");
@@ -1171,22 +1174,22 @@ Rangeslide.prototype = {
             }
         }
     },
-    
+
     isPositionOutOfBounds: function(position) {
         var size = this.config.data.length - 1;
         var distanceBetweenLabels = (this.__targetElement.clientWidth - this.config.thumbWidth) / size;
         return (position > distanceBetweenLabels * size) || (position < 0);
     },
-    
+
     areThumbsTooClose: function(position) {
         var distanceBetweenThumbs = this.__thumbRight.getLeft() - this.__thumbLeft.getRight();
         return distanceBetweenThumbs <= this.__minimalDistanceBetweenThumbs;
     },
-    
+
     getMarkerByIndex: function(index) {
         return this.config.data[index];
     },
-    
+
     fire: function(eventName, args) {
         if (!this.config.handlers || !this.config.handlers[eventName]) {
             return;
@@ -1196,23 +1199,23 @@ Rangeslide.prototype = {
             this.config.handlers[eventName][l].apply(this, args);
         }
     },
-    
+
     __isDOMElement: function (target) {
         return target instanceof Element;
     },
-    
+
     __isString: function (target) {
         return typeof target === "string";
     },
-    
+
     __isNumeric: function (value) {
         return !isNaN(parseFloat(value)) && isFinite(value);
     },
-    
+
     __isDate: function (item) {
         return item instanceof Date && typeof item.getMonth === "function";
     },
-    
+
     __isSet: function(value) {
         return !(value === undefined || value === null);
     }
